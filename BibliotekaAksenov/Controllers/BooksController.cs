@@ -1,7 +1,6 @@
 ﻿using BibliotekaAksenov.DataBaseContext;
 using BibliotekaAksenov.Model;
 using BibliotekaAksenov.Requests;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,14 +36,20 @@ public class BooksController : Controller
     //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> PostBook(CreateNewBook data)
     {
+        var genre = await _context.Genres.FindAsync(data.Genre_id);
+
+        if (genre is null)
+            throw new NullReferenceException();
+        
         var book = new Books()
         {
             Author = data.Author,
             Description = data.Description,
             Title = data.Description,
             Year = data.Year,
-            Genre_id = data.Genre_id
+            Genres = genre
         };
+        
         await _context.Books.AddAsync(book);
         await _context.SaveChangesAsync();
 

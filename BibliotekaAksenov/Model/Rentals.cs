@@ -8,13 +8,13 @@ public class Rentals
     [Key]
     public int id_Rental { get; set; }
     
-    [Required, ForeignKey(nameof(Books))]
+    [Required, ForeignKey(nameof(Model.Books))]
     public int Book_id { get; set; }
-    public Books Book { get; set; }
+    public Books Books { get; set; }
     
-    [Required, ForeignKey(nameof(Readers))]
+    [Required, ForeignKey(nameof(Model.Readers))]
     public int Reader_id { get; set; }
-    public Readers Reader { get; set; }
+    public Readers Readers { get; set; }
     
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
