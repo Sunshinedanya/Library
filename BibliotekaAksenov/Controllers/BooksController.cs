@@ -1,5 +1,6 @@
 ﻿using BibliotekaAksenov.DataBaseContext;
 using BibliotekaAksenov.Model;
+using BibliotekaAksenov.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -23,25 +24,35 @@ public class BooksController : Controller
         return await _context.Books.ToListAsync();
     }
 
-    [HttpGet("{id}"), Route(nameof(GetBook))]
+    [HttpGet, Route(nameof(GetBook))]
     public async Task<ActionResult<Books>> GetBook(int id)
     {
         var book = await _context.Books.FindAsync(id);
-        if (book == null) return NotFound();
+        if (book == null) 
+            return NotFound();
         return book;
     }
 
-    [HttpPost]
-    [Authorize(Roles = "Admin")]
-    public async Task<ActionResult<Books>> PostBook(Books book)
+    [HttpPost, Route(nameof(PostBook))]
+    //[Authorize(Roles = "Admin")]
+    public async Task<IActionResult> PostBook(CreateNewBook data)
     {
-        _context.Books.Add(book);
+        var book = new Books()
+        {
+            Author = data.Author,
+            Description = data.Description,
+            Title = data.Description,
+            Year = data.Year,
+            Genre_id = data.Genre_id
+        };
+        await _context.Books.AddAsync(book);
         await _context.SaveChangesAsync();
-        return CreatedAtAction("GetBook", new { id = book.id_Book }, book);
+
+        return Ok();
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> PutBook(int id, Books book)
     {
         if (id != book.id_Book) return BadRequest();
@@ -53,7 +64,7 @@ public class BooksController : Controller
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteBook(int id)
     {
         var book = await _context.Books.FindAsync(id);
