@@ -4,6 +4,7 @@ using BibliotekaAksenov.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BibliotekaAksenov.Controllers;
 
@@ -25,10 +26,9 @@ public class GenresController : Controller
     }
 
     [HttpPost, Route(nameof(PostGenre))]
-    //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> PostGenre(string name)
+    public async Task<ActionResult> PostGenre(string name)
     {
-        var genre = new Genres()
+        var genre = new Genres
         {
             Name = name
         };
@@ -37,29 +37,26 @@ public class GenresController : Controller
 
         return Ok();
     }
+    
+    [HttpPost, Route(nameof(EditGenre))]
+    public async Task<ActionResult> EditGenre(int id, string name)
+    {
+        var genre = await _context.GetGenre(id);
 
-    // [HttpPut("{id}")]
-    // //[Authorize(Roles = "Admin")]
-    // public async Task<IActionResult> PutBook(int id, Books book)
-    // {
-    //     if (id != book.id_Book) return BadRequest();
-    //
-    //     _context.Entry(book).State = EntityState.Modified;
-    //     await _context.SaveChangesAsync();
-    //
-    //     return NoContent();
-    // }
-    //
-    // [HttpDelete("{id}")]
-    // //[Authorize(Roles = "Admin")]
-    // public async Task<IActionResult> DeleteBook(int id)
-    // {
-    //     var book = await _context.Books.FindAsync(id);
-    //     if (book == null) return NotFound();
-    //
-    //     _context.Books.Remove(book);
-    //     await _context.SaveChangesAsync();
-    //
-    //     return NoContent();
-    // }
+        genre.Name = name;
+         
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+    
+    [HttpDelete, Route(nameof(DeleteGenre))]
+    public async Task<ActionResult> DeleteGenre(int genreId)
+    {
+        var genre = await _context.GetGenre(genreId);
+        
+        _context.Genres.Remove(genre);
+        await _context.SaveChangesAsync();
+
+        return Ok();
+    }
 }

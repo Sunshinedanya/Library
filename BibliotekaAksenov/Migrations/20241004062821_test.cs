@@ -49,7 +49,6 @@ namespace BibliotekaAksenov.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Genre_id = table.Column<int>(type: "int", nullable: false),
-                    Genreid_Genre = table.Column<int>(type: "int", nullable: false),
                     Year = table.Column<int>(type: "int", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AvailableCopies = table.Column<int>(type: "int", nullable: false)
@@ -58,8 +57,8 @@ namespace BibliotekaAksenov.Migrations
                 {
                     table.PrimaryKey("PK_Books", x => x.id_Book);
                     table.ForeignKey(
-                        name: "FK_Books_Genres_Genreid_Genre",
-                        column: x => x.Genreid_Genre,
+                        name: "FK_Books_Genres_Genre_id",
+                        column: x => x.Genre_id,
                         principalTable: "Genres",
                         principalColumn: "id_Genre",
                         onDelete: ReferentialAction.Cascade);
@@ -72,9 +71,7 @@ namespace BibliotekaAksenov.Migrations
                     id_Rental = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Book_id = table.Column<int>(type: "int", nullable: false),
-                    Bookid_Book = table.Column<int>(type: "int", nullable: false),
                     Reader_id = table.Column<int>(type: "int", nullable: false),
-                    Readerid_Reader = table.Column<int>(type: "int", nullable: false),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsReturned = table.Column<bool>(type: "bit", nullable: false)
@@ -83,33 +80,33 @@ namespace BibliotekaAksenov.Migrations
                 {
                     table.PrimaryKey("PK_Rentals", x => x.id_Rental);
                     table.ForeignKey(
-                        name: "FK_Rentals_Books_Bookid_Book",
-                        column: x => x.Bookid_Book,
+                        name: "FK_Rentals_Books_Book_id",
+                        column: x => x.Book_id,
                         principalTable: "Books",
                         principalColumn: "id_Book",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Rentals_Readers_Readerid_Reader",
-                        column: x => x.Readerid_Reader,
+                        name: "FK_Rentals_Readers_Reader_id",
+                        column: x => x.Reader_id,
                         principalTable: "Readers",
                         principalColumn: "id_Reader",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Books_Genreid_Genre",
+                name: "IX_Books_Genre_id",
                 table: "Books",
-                column: "Genreid_Genre");
+                column: "Genre_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rentals_Bookid_Book",
+                name: "IX_Rentals_Book_id",
                 table: "Rentals",
-                column: "Bookid_Book");
+                column: "Book_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rentals_Readerid_Reader",
+                name: "IX_Rentals_Reader_id",
                 table: "Rentals",
-                column: "Readerid_Reader");
+                column: "Reader_id");
         }
 
         /// <inheritdoc />

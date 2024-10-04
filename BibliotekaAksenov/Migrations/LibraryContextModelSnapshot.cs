@@ -44,9 +44,6 @@ namespace BibliotekaAksenov.Migrations
                     b.Property<int>("Genre_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Genreid_Genre")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -56,7 +53,7 @@ namespace BibliotekaAksenov.Migrations
 
                     b.HasKey("id_Book");
 
-                    b.HasIndex("Genreid_Genre");
+                    b.HasIndex("Genre_id");
 
                     b.ToTable("Books");
                 });
@@ -117,9 +114,6 @@ namespace BibliotekaAksenov.Migrations
                     b.Property<int>("Book_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Bookid_Book")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
@@ -129,49 +123,46 @@ namespace BibliotekaAksenov.Migrations
                     b.Property<int>("Reader_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("Readerid_Reader")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("id_Rental");
 
-                    b.HasIndex("Bookid_Book");
+                    b.HasIndex("Book_id");
 
-                    b.HasIndex("Readerid_Reader");
+                    b.HasIndex("Reader_id");
 
                     b.ToTable("Rentals");
                 });
 
             modelBuilder.Entity("BibliotekaAksenov.Model.Books", b =>
                 {
-                    b.HasOne("BibliotekaAksenov.Model.Genres", "Genre")
+                    b.HasOne("BibliotekaAksenov.Model.Genres", "Genres")
                         .WithMany("Books")
-                        .HasForeignKey("Genreid_Genre")
+                        .HasForeignKey("Genre_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Genre");
+                    b.Navigation("Genres");
                 });
 
             modelBuilder.Entity("BibliotekaAksenov.Model.Rentals", b =>
                 {
-                    b.HasOne("BibliotekaAksenov.Model.Books", "Book")
+                    b.HasOne("BibliotekaAksenov.Model.Books", "Books")
                         .WithMany("Rentals")
-                        .HasForeignKey("Bookid_Book")
+                        .HasForeignKey("Book_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BibliotekaAksenov.Model.Readers", "Reader")
+                    b.HasOne("BibliotekaAksenov.Model.Readers", "Readers")
                         .WithMany("Rentals")
-                        .HasForeignKey("Readerid_Reader")
+                        .HasForeignKey("Reader_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Book");
+                    b.Navigation("Books");
 
-                    b.Navigation("Reader");
+                    b.Navigation("Readers");
                 });
 
             modelBuilder.Entity("BibliotekaAksenov.Model.Books", b =>

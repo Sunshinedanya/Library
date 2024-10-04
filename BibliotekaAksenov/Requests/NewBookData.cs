@@ -1,6 +1,6 @@
 ﻿namespace BibliotekaAksenov.Requests;
 
-public class CreateNewBook
+public class NewBookData
 {
     public string Title { get; set; }
     public string Author { get; set; }

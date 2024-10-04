@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BibliotekaAksenov.Requests;
 
 namespace BibliotekaAksenov.Model;
 
@@ -19,4 +20,15 @@ public class Books
     public int AvailableCopies { get; set; }
     
     public List<Rentals> Rentals { get; set; }
+}
+
+public static class ExtensionBooks
+{
+    public static void SetNewData(this Books book, NewBookData data)
+    {
+        book.Title = data.Title;
+        book.Author = data.Author;
+        book.Year = data.Year;
+        book.Description = data.Description;
+    }
 }

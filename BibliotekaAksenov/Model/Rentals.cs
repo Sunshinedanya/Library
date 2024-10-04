@@ -1,10 +1,29 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BibliotekaAksenov.DataBaseContext;
+using BibliotekaAksenov.Requests;
 
 namespace BibliotekaAksenov.Model;
 
 public class Rentals
 {
+    public static async ValueTask<Rentals> Create(LibraryContext context,NewRentalData data)
+    {
+        var rental = new Rentals();
+
+        rental.Books = await context.GetBook(data.Book_id);
+        rental.Readers = await context.GetReader(data.Reader_id);
+        rental.StartDate = data.StartDate;
+        
+        return rental;
+    }
+
+    public void EndRental()
+    {
+        IsReturned = true;
+        EndDate = DateTime.Today;
+    }
+    
     [Key]
     public int id_Rental { get; set; }
     
