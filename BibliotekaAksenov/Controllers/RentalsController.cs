@@ -1,8 +1,7 @@
-﻿using BibliotekaAksenov.DataBaseContext;
-using BibliotekaAksenov.Model;
+﻿using BibliotekaAksenov.Model;
 using BibliotekaAksenov.Requests;
+using BibliotekaAksenov.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BibliotekaAksenov.Controllers;
 
@@ -10,52 +9,38 @@ namespace BibliotekaAksenov.Controllers;
 [ApiController]
 public class RentalsController : Controller
 {
-    private readonly LibraryContext _context;
+    private readonly IRentalsService _service;
     
-    public RentalsController(LibraryContext context)
+    public RentalsController(IRentalsService service)
     {
-        _context = context;
+        _service = service;
     }
     [HttpPost, Route(nameof(PostBook))]
     public async Task<IActionResult> PostBook(NewRentalData data)
     {
-        var rental = await Rentals.Create(_context, data);
-       
-        await _context.Rentals.AddAsync(rental);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.PostBook(data);
     }
     [HttpPut("{id:int}")]
     public async Task<IActionResult> PutBook(int id)
     {
-        var rental = await _context.GetRental(id);
-
-        rental.EndRental();
-        
-        _context.Entry(rental).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.PutBook(id);
     }
     
     [HttpGet, Route(nameof(GetReaderHistory))]
     public async Task<ActionResult<IEnumerable<Rentals>>> GetReaderHistory(int readerId)
     {
-        var reader = await _context.GetReader(readerId);
-        return reader.Rentals;
+        return await _service.GetReaderHistory(readerId);
     }
     
     [HttpGet, Route(nameof(GetBookHistory))]
     public async Task<ActionResult<IEnumerable<Rentals>>> GetBookHistory(int bookId)
     {
-        var book = await _context.GetBook(bookId);
-        return book.Rentals;
+        return await _service.GetBookHistory(bookId);
     }
 
     [HttpGet, Route(nameof(GetCurrentRentals))]
     public ActionResult<IEnumerable<Rentals>> GetCurrentRentals()
     {
-        return _context.Rentals.Where(rent => rent.IsReturned == false).ToList();
+        return _service.GetCurrentRentals();
     }
 }

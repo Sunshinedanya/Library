@@ -1,6 +1,7 @@
 ﻿using BibliotekaAksenov.DataBaseContext;
 using BibliotekaAksenov.Model;
 using BibliotekaAksenov.Requests;
+using BibliotekaAksenov.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,51 +13,34 @@ namespace BibliotekaAksenov.Controllers;
 [ApiController]
 public class GenresController : Controller
 {
-    private readonly LibraryContext _context;
+    private readonly IGenresService _service;
 
-    public GenresController(LibraryContext context)
+    public GenresController(IGenresService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet, Route(nameof(GetGenres))]
     public async Task<ActionResult<IEnumerable<Genres>>> GetGenres()
     {
-        return await _context.Genres.ToListAsync();
+        return await _service.GetGenres();
     }
 
     [HttpPost, Route(nameof(PostGenre))]
     public async Task<ActionResult> PostGenre(string name)
     {
-        var genre = new Genres
-        {
-            Name = name
-        };
-        await _context.Genres.AddAsync(genre);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.PostGenre(name);
     }
     
     [HttpPost, Route(nameof(EditGenre))]
     public async Task<ActionResult> EditGenre(int id, string name)
     {
-        var genre = await _context.GetGenre(id);
-
-        genre.Name = name;
-         
-        await _context.SaveChangesAsync();
-        return Ok();
+        return await _service.EditGenre(id, name);
     }
     
     [HttpDelete, Route(nameof(DeleteGenre))]
     public async Task<ActionResult> DeleteGenre(int genreId)
     {
-        var genre = await _context.GetGenre(genreId);
-        
-        _context.Genres.Remove(genre);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.DeleteGenre(genreId);
     }
 }

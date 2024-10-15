@@ -1,8 +1,8 @@
 ﻿using BibliotekaAksenov.DataBaseContext;
 using BibliotekaAksenov.Model;
 using BibliotekaAksenov.Requests;
+using BibliotekaAksenov.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BibliotekaAksenov.Controllers;
 
@@ -10,23 +10,23 @@ namespace BibliotekaAksenov.Controllers;
 [ApiController]
 public class BooksController : Controller
 {
-    private readonly LibraryContext _context;
-
-    public BooksController(LibraryContext context)
+    private readonly IBooksService _service;
+    
+    public BooksController(IBooksService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet, Route(nameof(GetBooks))]
-    public async Task<ActionResult<IEnumerable<Books>>> GetBooks()
+    public async Task<ActionResult<IEnumerable<Books>>> GetBooks(string author, string genre, int year, int page, int pageSize)
     {
-        return await _context.Books.ToListAsync();
+        return await _service.GetBooks(author, genre, year, page, pageSize);
     }
 
     [HttpGet, Route(nameof(GetBook))]
     public async Task<ActionResult<Books>> GetBook(int id)
     {
-        var book = await _context.Books.FindAsync(id);
+        var book = await _service.GetBook(id);
         if (book == null) 
             return NotFound();
         return book;
@@ -35,63 +35,32 @@ public class BooksController : Controller
     [HttpGet, Route(nameof(GetBookByGenre))]
     public async Task<ActionResult<Books>> GetBookByGenre(string genreName)
     {
-        var genre = await _context.GetGenre(genreName);
-        
-        var book = await _context.GetBook(genre);
+        var book = await _service.GetBookByGenre(genreName);
         return book;
     }
     
     [HttpGet, Route(nameof(GetBookByName))]
     public async Task<ActionResult<Books>> GetBookByName(string author, string title)
     {
-        var book = await _context.GetBook(author, title);
+        var book = await _service.GetBookByName(author, title);
         return book;
     }
     
     [HttpPost, Route(nameof(PostBook))]
     public async Task<IActionResult> PostBook(NewBookData data)
     {
-        var genre = await _context.Genres.FindAsync(data.Genre_id);
-
-        if (genre is null)
-            throw new NullReferenceException();
-        
-        var book = new Books()
-        {
-            Author = data.Author,
-            Description = data.Description,
-            Title = data.Description,
-            Year = data.Year,
-            Genres = genre
-        };
-        
-        await _context.Books.AddAsync(book);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.PostBook(data);
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> PutBook(int id, NewBookData data)
     {
-        var book = await _context.GetBook(id);
-
-        book.SetNewData(data);
-        
-        _context.Entry(book).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.PutBook(id, data);
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteBook(int id)
     {
-        var book = await _context.GetBook(id);
-
-        _context.Books.Remove(book);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+       return await _service.DeleteBook(id);
     }
 }

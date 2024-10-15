@@ -1,8 +1,7 @@
-﻿using BibliotekaAksenov.DataBaseContext;
-using BibliotekaAksenov.Model;
+﻿using BibliotekaAksenov.Model;
 using BibliotekaAksenov.Requests;
+using BibliotekaAksenov.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BibliotekaAksenov.Controllers;
 
@@ -10,58 +9,39 @@ namespace BibliotekaAksenov.Controllers;
 [ApiController]
 public class ReadersController : Controller
 {
-    public ReadersController(LibraryContext context)
+    private readonly IReadersService _service;
+    public ReadersController(IReadersService service)
     {
-        _context = context;
+        _service = service;
     }
-
-    private readonly LibraryContext _context;
     
     [HttpGet, Route(nameof(GetReaders))]
-    public async Task<ActionResult<IEnumerable<Readers>>> GetReaders()
+    public async Task<ActionResult<IEnumerable<Readers>>> GetReaders(int page, int pageSize)
     {
-        return await _context.Readers.ToListAsync();
+        return await _service.GetReaders(page, pageSize);
     }
 
     [HttpGet, Route(nameof(GetReader))]
     public async Task<ActionResult<Readers>> GetReader(int id)
     {
-        return await _context.GetReader(id);
+        return await _service.GetReader(id);
     }
 
     [HttpPost, Route(nameof(PostReader))]
     public async Task<ActionResult<Readers>> PostReader(NewReaderData data)
     {
-        var reader = new Readers();
-        reader.SetNewData(data);
-        
-        await _context.Readers.AddAsync(reader);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.PostReader(data);
     }
 
     [HttpPut, Route(nameof(PutReader))]
     public async Task<IActionResult> PutReader(int id, NewReaderData data)
     {
-        var reader = await _context.GetReader(id);
-        
-        reader.SetNewData(data);
-        
-        _context.Entry(reader).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.PutReader(id, data);
     }
     
     [HttpDelete, Route(nameof(DeleteReader))]
     public async Task<IActionResult> DeleteReader(int id)
     {
-        var reader = await _context.GetReader(id);
-
-        _context.Readers.Remove(reader);
-        await _context.SaveChangesAsync();
-
-        return Ok();
+        return await _service.DeleteReader(id);
     }
 }
