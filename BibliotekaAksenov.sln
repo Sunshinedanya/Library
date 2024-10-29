@@ -2,6 +2,10 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotekaAksenov", "BibliotekaAksenov\BibliotekaAksenov.csproj", "{8B046146-2E3A-4893-BA2C-C4375865E139}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReaderApi", "ReaderApi\ReaderApi.csproj", "{EFA64DE4-0D5B-44A0-A1D2-6E8185B5A6A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookApi", "BookApi\BookApi.csproj", "{0429D527-21A9-4CB7-83B1-ECB1B18354DE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +16,13 @@ Global
 		{8B046146-2E3A-4893-BA2C-C4375865E139}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8B046146-2E3A-4893-BA2C-C4375865E139}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8B046146-2E3A-4893-BA2C-C4375865E139}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFA64DE4-0D5B-44A0-A1D2-6E8185B5A6A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFA64DE4-0D5B-44A0-A1D2-6E8185B5A6A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFA64DE4-0D5B-44A0-A1D2-6E8185B5A6A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFA64DE4-0D5B-44A0-A1D2-6E8185B5A6A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0429D527-21A9-4CB7-83B1-ECB1B18354DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0429D527-21A9-4CB7-83B1-ECB1B18354DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0429D527-21A9-4CB7-83B1-ECB1B18354DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0429D527-21A9-4CB7-83B1-ECB1B18354DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
